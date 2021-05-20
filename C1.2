@@ -1,0 +1,48 @@
+
+#include "Senses_wifi_esp32.h"
+#include <WiFi.h>
+const char *ssid = "...."; // your network SSID (Hot spotname)
+const char *pass = "...."; // your network password
+const char *userid = "...." ; // channel ID number (Senses ID)
+const char * key = "...."; // Device key
+//------------------------------------------------------------------
+WiFiClient client;
+Senses_wifi_esp32 myiot;
+const int Analog1 = 36;
+const int Analog2 = 35;
+const int Digital1 = 2;
+const int Digital2 = 5;
+void setup()
+{
+Serial.begin(115200);
+delay(10);
+pinMode(Digital1, INPUT_PULLUP);
+pinMode(Digital2, INPUT_PULLUP);
+// We start by connecting to a WiFi network and sense platform
+Serial.println("Connect to hot spot");
+String response = myiot.connect(ssid, pass, userid, key);
+Serial.println(response);
+}
+void loop (){
+float LightA = analogRead(Analog1);
+float LightD = digitalRead(Digital1);
+float MicA = analogRead(Analog2);
+float MicD = digitalRead(Digital2);
+String response = myiot.send(1,LightA); // myiot.send(slot_mnumber on SensesPlatform,data)
+Serial.println(response);
+Serial.print("Light dencity :");
+Serial.println(LightA);
+response = myiot.send(2, LightD); // myiot.send(slot_mnumber on SensesPlatform,data)
+Serial.println(response);
+Serial.print("Light status :");
+Serial.println(LightD);
+response = myiot.send(3,MicA); // myiot.send(slot_mnumber on SensesPlatform,data)
+Serial.println(response);
+Serial.print("Sound volumn :");
+Serial.println(MicA);
+response = myiot.send(4, MicD); // myiot.send(slot_mnumber on SensesPlatform,data)
+Serial.println(response);
+Serial.print("Sound status :");
+Serial.println(MicD);
+delay(500);
+}
