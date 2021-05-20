@@ -1,0 +1,34 @@
+
+#include "Senses_wifi_esp32.h"
+#include <Wire.h>
+#include "Adafruit_Sensor.h"
+#include <Adafruit_BMP280.h>
+const char *ssid = "...."; // your network SSID (Hot spotname)
+const char *pass = "...."; // your network password
+const char *userid = "...." ; // channel ID number (Senses ID)
+const char * key = "...."; // Device key
+//------------------------------------------------------------------
+WiFiClient client;
+Senses_wifi_esp32 myiot;
+Adafruit_BMP280 bme;
+void setup()
+{
+Serial.begin(115200);
+delay(10);
+Wire.begin();
+if (!bme.begin(0x76)){
+Serial.println("Could not find a valid BMP280 sensor, check wiring!");
+while (1);
+}
+// We start by connecting to a WiFi network and sense platform
+Serial.println("Connect to hot spot");
+String response = myiot.connect(ssid, pass, userid, key);
+Serial.println(response);
+}
+void loop (){
+float pressure = bme.readPressure();
+String response = myiot.send(1,pressure); // myiot.send(slot_mnumber on SensesPlatform,data)
+Serial.println(response);
+Serial.print("Air pressure :");
+Serial.println(pressure);
+}
