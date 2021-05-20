@@ -1,0 +1,21 @@
+\m4_TLV_version 1d: tl-x.org
+\SV
+   `include "sqrt32.v";
+   m4_makerchip_module
+\TLV
+   
+   |calc
+      
+      // Square
+      @1
+         $aa_s[7:0] = $aa[3:0] ** 2; // สุ่มค่าให้ aa_s เป็นค่าที่มีขนาด 8 บิต โดยมีค่าเท่ากับ ค่าที่สุ่มให้aa ที่มีขนาด 4 บิต ยกกำลังสอง
+      // Print
+         \SV_plus
+            always_ff @(posedge clk) begin
+               \$display("ขนาดพื้นที่สี่เหลี่ยมจัตุรัสของ (\%2d ^ 2) = \%2d", $aa,$aa_s);
+            end
+
+   // Stop simulation.
+   *passed = *cyc_cnt > 40;
+\SV
+endmodule
